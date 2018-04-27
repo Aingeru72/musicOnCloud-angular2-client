@@ -12,12 +12,14 @@ export class CancionesComponent implements OnInit {
   // Atributos de Clase
   canciones: Cancion[];
   cancionSeleccionada: Cancion;
+  nuevaCancion: string;
 
   constructor(private cancionesService: CancionesService) {
     console.log('CancionesComponent.constructor()');
     // Inicializar los atributos de Clase
     this.canciones = [];
     this.cancionSeleccionada = new Cancion(-1, '');
+    this.nuevaCancion = '';
 
     // Canciones hardcodeadas
     // this.mockData();

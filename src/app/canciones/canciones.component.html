@@ -7,12 +7,43 @@
  
   {{ canciones | json }}
 
+  <!-- Input para nueva añadir nueva canción -->
+  <div class="input-group mb-3">
+      <input type="text" class="form-control" placeholder="Título de la cancion a añadir" aria-label="Titulo de la cancion" aria-describedby="basic-addon2">
+      <div class="input-group-append">
+        <button class="btn btn-primary" type="button" [(ngModel)]="nuevaCancion">Añadir</button>
+      </div>
+    </div>
+
   <ul class="list-group" *ngFor="let cancion of canciones">
       <li class="list-group-item d-flex justify-content-between align-items-center">
         <span class="badge badge-primary badge-pill">{{cancion.id}}</span>
-        <span class="text-left">{{cancion.nombre}}</span>
+        <span class="text-left" data-toggle="modal" data-target="#modificarCancion">
+          {{cancion.nombre}}
+        </span>
         <span (click)="eliminar(cancion.id)" class="badge badge-danger badge-pill">Eliminar</span>
       </li>
   </ul>
 
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="modificarCancion" tabindex="-1" role="dialog" aria-labelledby="modificarCancionLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          ...
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
