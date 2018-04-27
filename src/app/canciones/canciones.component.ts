@@ -20,24 +20,63 @@ export class CancionesComponent implements OnInit {
     this.cancionSeleccionada = new Cancion(-1, '');
 
     // Canciones hardcodeadas
-    this.mockData();
+    // this.mockData();
   }
 
   ngOnInit() {
     console.log('CancionesComponent.ngOnInit()');
     // Llamadas a los servicios (providers)
+    this.cargarCanciones();
+  }
+
+  /**
+   * Cargar todas las canciones mediante el provider cancionesService
+   */
+  cargarCanciones(): void {
+    console.log('CancionesComponent.cargarCanciones()');
+    // Reset de la lista de canciones
+    this.canciones = [];
+    this.cancionesService.getAll().subscribe(
+      resultado => {
+        // tslint:disable-next-line:no-console
+        console.debug('peticion correcta %o', resultado);
+        this.mapeo(resultado);
+      },
+      error => {
+        console.warn('peticion incorrecta %o', error);
+      }
+    );
   }
 
   eliminar( id: number ) {
     console.log(`CancionesComponent eliminar ${id}`);
   }
 
-  mockData(): void {
-    this.canciones.push(new Cancion(1, 'Macarena'));
-    this.canciones.push(new Cancion(2, 'Asereje'));
-    this.canciones.push(new Cancion(3, 'Paquito Chocolatero'));
-    this.canciones.push(new Cancion(4, 'BOOOOOMBA'));
-    this.canciones.push(new Cancion(5, 'Mayonesa'));
+  /**
+   * Mapea los datos recibidos del provider en formato JSON a una lista de canciones
+   * @param result resultado de la petición (request)
+   */
+  mapeo( result: any ) {
+    let cancion: Cancion;
+
+    // Parsear elementos recibidos
+    result.forEach(element => {
+      cancion = new Cancion(element.title);
+      cancion.id = element.id;
+      cancion.nombre = element.nombre;
+
+      // Rellenar la lista con el nuevo elemento
+      this.canciones.push(cancion);
+    });
+
   }
+
+  // mockData(): void {
+  //   this.canciones.push(new Cancion(1, 'Macarena'));
+  //   this.canciones.push(new Cancion(2, 'Asereje'));
+  //   this.canciones.push(new Cancion(3, 'Paquito Chocolatero'));
+  //   this.canciones.push(new Cancion(4, 'BOOOOOMBA'));
+  //   this.canciones.push(new Cancion(5, 'Mayonesa'));
+  // }
 
 }

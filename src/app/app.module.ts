@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
+import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { CancionesComponent } from './canciones/canciones.component';
@@ -13,7 +13,8 @@ import { CancionesService } from './providers/canciones.service';
     CancionesComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    HttpClientModule
   ],
   providers: [
     CancionesService
