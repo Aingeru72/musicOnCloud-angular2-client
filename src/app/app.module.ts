@@ -3,16 +3,21 @@ import { NgModule } from '@angular/core';
 
 
 import { AppComponent } from './app.component';
+import { CancionesComponent } from './canciones/canciones.component';
+import { CancionesService } from './providers/canciones.service';
 
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    CancionesComponent
   ],
   imports: [
     BrowserModule
   ],
-  providers: [],
+  providers: [
+    CancionesService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
