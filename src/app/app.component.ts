@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+// Variables para usar jQuery
+declare var jQuery: any;
+declare var $: any;
 
 @Component({
   selector: 'app-root',

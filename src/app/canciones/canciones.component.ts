@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CancionesService } from '../providers/canciones.service';
 import { Cancion } from '../model/cancion';
+// Variables para usar jQuery
+declare var jQuery: any;
+declare var $: any;
 
 @Component({
   selector: 'app-canciones',
@@ -13,6 +16,7 @@ export class CancionesComponent implements OnInit {
   canciones: Cancion[];
   cancionSeleccionada: Cancion;
   nuevaCancion: string;
+  isValid: boolean;
 
   constructor(private cancionesService: CancionesService) {
     console.log('CancionesComponent.constructor()');
@@ -20,6 +24,7 @@ export class CancionesComponent implements OnInit {
     this.canciones = [];
     this.cancionSeleccionada = new Cancion(-1, '');
     this.nuevaCancion = '';
+    this.isValid = false;
 
     // Canciones hardcodeadas
     // this.mockData();
@@ -42,7 +47,9 @@ export class CancionesComponent implements OnInit {
       resultado => {
         // tslint:disable-next-line:no-console
         console.debug('peticion correcta %o', resultado);
-        this.mapeo(resultado);
+        if (resultado != null) {
+          this.mapeo(resultado);
+        }
       },
       error => {
         console.warn('peticion incorrecta %o', error);
@@ -50,8 +57,71 @@ export class CancionesComponent implements OnInit {
     );
   }
 
+  /**
+   * Inserta nueva canción en la BD, sólo si el título de la canción no es vacio
+   */
+  insertar() {
+    console.log(`CancionesComponent.insertar( ${this.nuevaCancion} )`);
+
+    if (this.nuevaCancion.trim() === '') {
+      // tslint:disable-next-line:no-console
+      console.warn('No puede añadir una nueva canción con título vacio');
+      this.isValid = true;
+    } else {
+      this.isValid = false;
+      this.cancionesService.add(this.nuevaCancion).subscribe(
+        resultado => {
+          // tslint:disable-next-line:no-console
+          console.debug('peticion correcta %o', resultado);
+          this.cargarCanciones();
+          this.nuevaCancion = '';
+        },
+        error => {
+          console.warn('peticion incorrecta %o', error);
+        }
+      );
+    }
+  }
+
+  modificar(index: number) {
+    const cancion = this.canciones[index];
+    console.log(`CancionesComponent.modificar( ${cancion} )`);
+
+    if (cancion.nombre.trim() === '') {
+      alert('No puede dejar un título vacio!');
+    } else {
+      this.cancionesService.modify(cancion).subscribe(
+        resultado => {
+          // tslint:disable-next-line:no-console
+          console.debug('peticion correcta %o', resultado);
+          this.cargarCanciones();
+        },
+        error => {
+          console.warn('peticion incorrecta %o', error);
+        }
+      );
+    }
+  }
+
+  /**
+   * Elimina una canción a partir de su id
+   * @param id : id de la canción a eliminar
+   */
   eliminar( id: number ) {
-    console.log(`CancionesComponent eliminar ${id}`);
+    console.log(`CancionesComponent.eliminar( ${id} )`);
+
+    if ( confirm('¿Está seguro de eliminar la canción?') ) {
+      this.cancionesService.delete(id).subscribe(
+        resultado => {
+          // tslint:disable-next-line:no-console
+          console.debug('peticion correcta %o', resultado);
+          this.cargarCanciones();
+        },
+        error => {
+          console.warn('peticion incorrecta %o', error);
+        }
+      );
+    }
   }
 
   /**
@@ -73,12 +143,8 @@ export class CancionesComponent implements OnInit {
 
   }
 
-  // mockData(): void {
-  //   this.canciones.push(new Cancion(1, 'Macarena'));
-  //   this.canciones.push(new Cancion(2, 'Asereje'));
-  //   this.canciones.push(new Cancion(3, 'Paquito Chocolatero'));
-  //   this.canciones.push(new Cancion(4, 'BOOOOOMBA'));
-  //   this.canciones.push(new Cancion(5, 'Mayonesa'));
-  // }
+  cerrarAlerta(this) {
+    console.log('elemento %o', this);
+  }
 
 }

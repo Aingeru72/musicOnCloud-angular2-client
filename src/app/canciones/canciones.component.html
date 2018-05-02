@@ -5,30 +5,37 @@
 <div class="jumbotron">
   <p *ngIf="canciones.length == 0">Aún no existen canciones</p>
  
-  {{ canciones | json }}
+  <!-- {{ canciones | json }} -->
 
   <!-- Input para nueva añadir nueva canción -->
   <div class="input-group mb-3">
-      <input type="text" class="form-control" placeholder="Título de la cancion a añadir" aria-label="Titulo de la cancion" aria-describedby="basic-addon2">
-      <div class="input-group-append">
-        <button class="btn btn-primary" type="button" [(ngModel)]="nuevaCancion">Añadir</button>
-      </div>
+    <input type="text" class="form-control" [(ngModel)]="nuevaCancion" placeholder="Título de la cancion a añadir" aria-label="Titulo de la cancion" aria-describedby="basic-addon2">
+    <div class="input-group-append">
+      <button class="btn btn-primary" type="button" (click)="insertar()">Añadir</button>
     </div>
+  </div>
 
-  <ul class="list-group" *ngFor="let cancion of canciones">
-      <li class="list-group-item d-flex justify-content-between align-items-center">
+  <div *ngIf="isValid" class="alert alert-warning alert-dismissible fade show" role="alert">
+    La canción debe contener un título
+    <button type="button" class="close" aria-label="Close">
+      <span aria-hidden="true" (click)="cerrarAlerta($event)">&times;</span>
+    </button>
+  </div>
+
+  <ul class="list-group">
+      <li *ngFor="let cancion of canciones; let i = index" class="list-group-item d-flex justify-content-between align-items-center">
         <span class="badge badge-primary badge-pill">{{cancion.id}}</span>
         <span class="text-left" data-toggle="modal" data-target="#modificarCancion">
-          {{cancion.nombre}}
+          <input [(ngModel)]="cancion.nombre" (focusout)="modificar(i)">
         </span>
-        <span (click)="eliminar(cancion.id)" class="badge badge-danger badge-pill">Eliminar</span>
+        <span (click)="eliminar(cancion.id)" class="btn badge badge-danger badge-pill">Eliminar</span>
       </li>
   </ul>
 
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="modificarCancion" tabindex="-1" role="dialog" aria-labelledby="modificarCancionLabel" aria-hidden="true">
+<!-- <div class="modal fade" id="modificarCancion" tabindex="-1" role="dialog" aria-labelledby="modificarCancionLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -46,4 +53,4 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
